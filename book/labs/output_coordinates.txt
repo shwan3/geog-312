@@ -1,0 +1,5 @@
+Latitude: 40.7128, Longitude:  -74.0060
+Latitude: 34.0522, Longitude:  -118.2437
+Latitude: 41.8781, Longitude:  -87.6298
+Latitude: 29.7604, Longitude:  -95.3698
+Latitude: 33.4484, Longitude:  -112.0740
