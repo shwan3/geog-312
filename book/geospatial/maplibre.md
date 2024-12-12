@@ -2129,7 +2129,7 @@ m
 m.layer_interact()
 ```
 
-### Source Cooperative Data
+### Building Footprint Data
 
 Visualize the [Google-Microsoft Open Buildings dataset](https://beta.source.coop/repositories/vida/google-microsoft-open-buildings/description), managed by VIDA, in PMTiles format. Fetch metadata to identify available layers, apply custom styles to the building footprints, and render them with semi-transparent colors for a clear visualization.
 
@@ -2173,6 +2173,109 @@ m.add_pmtiles(
     opacity=1.0,
     tooltip=True,
 )
+m
+```
+
+```{code-cell} ipython3
+m.layer_interact()
+```
+
+### Fields of The World
+
+Visualize the Agricultural Field Boundary dataset - Fields of The World ([FTW](https://fieldsofthe.world)). The dataset is available on Source Cooperative at https://source.coop/repositories/kerner-lab/fields-of-the-world/description.
+
+```{code-cell} ipython3
+url = "https://data.source.coop/kerner-lab/fields-of-the-world/ftw-sources.pmtiles"
+metadata = leafmap.pmtiles_metadata(url)
+print(f"layer names: {metadata['layer_names']}")
+print(f"bounds: {metadata['bounds']}")
+```
+
+```{code-cell} ipython3
+m = leafmap.Map()
+# Define colors for each last digit (0-9)
+style = {
+    "layers": [
+        {
+            "id": "Field Polygon",
+            "source": "example_source",
+            "source-layer": "ftw-sources",
+            "type": "fill",
+            "paint": {
+                "fill-color": [
+                    "case",
+                    ["==", ["%", ["to-number", ["get", "id"]], 10], 0],
+                    "#FF5733",  # Color for last digit 0
+                    ["==", ["%", ["to-number", ["get", "id"]], 10], 1],
+                    "#33FF57",  # Color for last digit 1
+                    ["==", ["%", ["to-number", ["get", "id"]], 10], 2],
+                    "#3357FF",  # Color for last digit 2
+                    ["==", ["%", ["to-number", ["get", "id"]], 10], 3],
+                    "#FF33A1",  # Color for last digit 3
+                    ["==", ["%", ["to-number", ["get", "id"]], 10], 4],
+                    "#FF8C33",  # Color for last digit 4
+                    ["==", ["%", ["to-number", ["get", "id"]], 10], 5],
+                    "#33FFF6",  # Color for last digit 5
+                    ["==", ["%", ["to-number", ["get", "id"]], 10], 6],
+                    "#A833FF",  # Color for last digit 6
+                    ["==", ["%", ["to-number", ["get", "id"]], 10], 7],
+                    "#FF333D",  # Color for last digit 7
+                    ["==", ["%", ["to-number", ["get", "id"]], 10], 8],
+                    "#33FFBD",  # Color for last digit 8
+                    ["==", ["%", ["to-number", ["get", "id"]], 10], 9],
+                    "#FF9933",  # Color for last digit 9
+                    "#FF0000",  # Fallback color if no match
+                ],
+                "fill-opacity": 0.5,
+            },
+        },
+        {
+            "id": "Field Outline",
+            "source": "example_source",
+            "source-layer": "ftw-sources",
+            "type": "line",
+            "paint": {"line-color": "#ffffff", "line-width": 1, "line-opacity": 1},
+        },
+    ],
+}
+
+m.add_basemap("Satellite")
+m.add_pmtiles(url, style=style, name="FTW", zoom_to_layer=False)
+m.add_layer_control()
+m
+```
+
+```{code-cell} ipython3
+m.layer_interact()
+```
+
+```{code-cell} ipython3
+m = leafmap.Map()
+style = {
+    "layers": [
+        {
+            "id": "Field Polygon",
+            "source": "example_source",
+            "source-layer": "ftw-sources",
+            "type": "fill",
+            "paint": {
+                "fill-color": "#ffff00",
+                "fill-opacity": 0.2,
+            },
+        },
+        {
+            "id": "Field Outline",
+            "source": "example_source",
+            "source-layer": "ftw-sources",
+            "type": "line",
+            "paint": {"line-color": "#ff0000", "line-width": 1, "line-opacity": 1},
+        },
+    ],
+}
+
+m.add_basemap("Satellite")
+m.add_pmtiles(url, style=style, name="FTW", zoom_to_layer=False)
+m.add_layer_control()
 m
 ```
 
@@ -2568,6 +2671,12 @@ m.add_layer(layer)
 m
 ```
 
+```{code-cell} ipython3
+for degree in range(0, 180, 1):
+    m.rotate_to(degree, {"duration": 0})
+    time.sleep(0.1)
+```
+
 ![](https://i.imgur.com/odCwtjT.png)
 
 +++
@@ -2575,12 +2684,6 @@ m
 ### Animating a Point
 
 Animate a point along a circular path by computing points on a circle and updating the map. This is ideal for showing circular motion on the map, and can be customized for duration and frame rate to control the animation speed.
-
-```{code-cell} ipython3
-for degree in range(0, 180, 1):
-    m.rotate_to(degree, {"duration": 0})
-    time.sleep(0.1)
-```
 
 ```{code-cell} ipython3
 import math
@@ -2777,6 +2880,71 @@ m.to_html(
     replace_key=True,
 )
 m
+```
+
+## Exercises
+
+### Exercise 1: Setting up MapLibre and Basic Map Creation
+
+   - Initialize a map centered on a country of your choice with an appropriate zoom level and display it with the `dark-matter` basemap.
+   - Change the basemap style to `liberty` and display it again.
+
+```{code-cell} ipython3
+
+```
+
+### Exercise 2: Customizing the Map View
+
+   - Create a 3D map of a city of your choice with an appropriate zoom level, pitch and bearing using the `liberty` basemap.
+   - Experiment with MapTiler 3D basemap styles, such as `3d-satellite`, `3d-hybrid`, and `3d-topo`, to visualize a location of your choice in different ways. Please set your MapTiler API key as Colab secret and do NOT expose the API key in the notebook.
+
+```{code-cell} ipython3
+
+```
+
+### Exercise 3: Adding Map Controls
+
+   - Create a map centered on a city of your choice and add the following controls to the map:
+     - **Geolocate** control positioned at the top left.
+     - **Fullscreen** control at the top right.
+     - **Draw** control for adding points, lines, and polygons, positioned at the top left.
+
+```{code-cell} ipython3
+
+```
+
+### Exercise 4: Overlaying Data Layers
+
+   - **GeoJSON Layer**: Create a map and add the following GeoJSON data layers to the map with appropriate styles:
+     - NYC buildings: https://github.com/opengeos/datasets/releases/download/places/nyc_buildings.geojson
+     - NYC roads: https://github.com/opengeos/datasets/releases/download/places/nyc_roads.geojson
+   - **Thematic Raster Layer**: Create a map with a satellite basemap and add the following raster data layer to the map with an appropriate legend:
+     - National Land Cover Database (NLCD) 2021: https://github.com/opengeos/datasets/releases/download/raster/nlcd_2021_land_cover_90m.tif
+   - **DEM Layer:** Create a map with a satellite basemap and add the following DEM layer to the map with an appropriate color bar:
+     - DEM: https://github.com/opengeos/datasets/releases/download/raster/dem.tif
+   - **WMS Layer**: Create a map and add the ESA WorldCover WMS layer to the map with an appropriate legend:
+     - url: https://services.terrascope.be/wms/v2
+     - layers: WORLDCOVER_2021_MAP
+
+```{code-cell} ipython3
+
+```
+
+### Exercise 5: Working with 3D Buildings
+
+   - Set up a 3D map centered on a city of your choice with an appropriate zoom level, pitch, and bearing.
+   - Add 3D buildings to the map with extrusions based on their height attributes. Use a custom color gradient for the extrusion color.
+
+```{code-cell} ipython3
+
+```
+
+### Exercise 6: Adding Map Elements
+   - **Image and Text**: Add a logo image of your choice with appropriate text to the map.
+   - **GIF**: Add an animated GIF of your choice to the map.
+
+```{code-cell} ipython3
+
 ```
 
 ## Summary
